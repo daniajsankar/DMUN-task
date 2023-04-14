@@ -1,8 +1,10 @@
 import './styles/App.scss';
 import "react-phone-number-input/style.css";
+import "react-toastify/dist/ReactToastify.css";
 import React, { useState, useCallback, useEffect } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import Routes from './Routes';
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const [socketUrl, setSocketUrl] = useState('wss://echo.websocket.org');
@@ -31,7 +33,10 @@ function App() {
   //connectionStatus will keep Connecting 
 
   return (
-    <Routes />
+    <>
+      <Routes />
+      <ToastContainer />
+    </>
   );
 }
 

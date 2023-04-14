@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BackgroundImage from "../images/Building-Construction.jpeg"
 import MobileInput from "../components/MobileInput/MobileInput";
-import CryptoJS from "crypto-js";
+import getStripe from '../lib/getStripe';
+import { toast } from "react-toastify";
+import { encryptData, decryptData } from "../helpers/Encrption";
 
 const initialState = {
     name: "",
@@ -15,34 +17,64 @@ function Home() {
     const [{ name, mobile, email, address, notes }, setClientInfo] = useState(initialState);
     const [mobileError, setMobileError] = useState(false);
     const [mobileValidity, setValidity] = useState(false);
-    const secretPass = "XkhZG4fW2t2W";
+    const [loading, setLoading] = useState(false);
 
-    const encryptData = (text) => {
-        const data = CryptoJS.AES.encrypt(
-            JSON.stringify(text),
-            secretPass
-        ).toString();
-
-        return (data);
-    };
-    const decryptData = (text) => {
-        const bytes = CryptoJS.AES.decrypt(text, secretPass);
-        const data = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-        return (data);
-    };
+    useEffect(() => {
+        restoreClientInfo();
+    }, []);
 
     const onChange = (e) => {
         const { name, value } = e.target;
         setClientInfo((prevState) => ({ ...prevState, [name]: value }));
     };
 
+    async function handleCheckout() {
+        const stripe = await getStripe();
+        const { error } = await stripe.redirectToCheckout({
+            lineItems: [
+                {
+                    price: process.env.REACT_APP_PUBLIC_STRIPE_PRICE_ID,
+                    quantity: 1,
+                },
+            ],
+            mode: 'subscription',
+            successUrl: `http://localhost:3000/payment`,
+            cancelUrl: `http://localhost:3000/`,
+            customerEmail: email,
+        });
+        console.warn(error.message);
+    }
+
+    const restoreClientInfo = () => {
+        setClientInfo({
+            name: decryptData(localStorage.getItem("name")),
+            email: decryptData(localStorage.getItem("email")),
+            mobile: decryptData(localStorage.getItem("mobile")),
+            address: decryptData(localStorage.getItem("address"))
+        })
+    }
+
+    const storeClientInfo = () => {
+        localStorage.setItem("name", encryptData(name));
+        localStorage.setItem("email", encryptData(email));
+        localStorage.setItem("mobile", encryptData(mobile));
+        localStorage.setItem("address", encryptData(address));
+    }
+
     const submit = (e) => {
         e.preventDefault();
         if (!mobileValidity) {
+            toast.error("Please enter a valid mobile number", {
+                position: "top-right",
+                autoClose: 4000,
+            });
             setMobileError(true);
             return;
         } else {
+            setLoading(true);
             setMobileError(false);
+            storeClientInfo();
+            handleCheckout();
         }
     };
     return (
@@ -106,7 +138,8 @@ function Home() {
                             name="notes"
                             onChange={onChange} />
                     </div>
-                    <button type="submit">Submit</button>
+                    <button type="submit" className="center"
+                        loading={loading}>{loading ? <div className="loader" /> : "Submit"}</button>
                 </form>
             </div>
         </div>
