@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import ProtectedRoute from "./components/ProtectedRoute";
 import ScrollToTop from './components/ScrollToTop';
 import Home from './screens/Home';
-import Payment from './screens/Payment';
+import Progress from './screens/Progress';
 
 function Routes() {
 	return (
@@ -12,7 +12,7 @@ function Routes() {
 				<ScrollToTop>
 					<Switch>
 						<Route path="/" exact component={Home} />
-						<ProtectedRoute path="/payment" exact component={Payment} />
+						<ProtectedRoute path="/progress" exact component={Progress} />
 					</Switch>
 				</ScrollToTop>
 			</Router>

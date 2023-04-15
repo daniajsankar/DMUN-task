@@ -78,7 +78,6 @@ const MobileInput = ({
       defaultCountry={"AE"}
       value={value}
       placeholder={placeholder}
-      enableSearch={true}
       onChange={setValue}
       required={required}
       autoFocus={autoFocus}

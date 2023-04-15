@@ -1,6 +1,7 @@
 import './styles/App.scss';
 import "react-phone-number-input/style.css";
 import "react-toastify/dist/ReactToastify.css";
+import "react-step-progress-bar/styles.css";
 import React, { useState, useCallback, useEffect } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import Routes from './Routes';
@@ -30,7 +31,6 @@ function App() {
     [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
   }[readyState];
 
-  //connectionStatus will keep Connecting 
 
   return (
     <>

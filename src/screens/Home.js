@@ -38,7 +38,7 @@ function Home() {
                 },
             ],
             mode: 'subscription',
-            successUrl: `http://localhost:3000/payment`,
+            successUrl: `http://localhost:3000/progress`,
             cancelUrl: `http://localhost:3000/`,
             customerEmail: email,
         });
@@ -74,6 +74,7 @@ function Home() {
             setLoading(true);
             setMobileError(false);
             storeClientInfo();
+            localStorage.setItem("registered", "yes");
             handleCheckout();
         }
     };
@@ -138,8 +139,7 @@ function Home() {
                             name="notes"
                             onChange={onChange} />
                     </div>
-                    <button type="submit" className="center"
-                        loading={loading}>{loading ? <div className="loader" /> : "Submit"}</button>
+                    <button type="submit" className="center">{loading ? <div className="loader" /> : "Submit"}</button>
                 </form>
             </div>
         </div>
