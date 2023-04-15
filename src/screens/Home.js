@@ -80,8 +80,8 @@ function Home() {
     };
     return (
         <div className="app">
-            <img src={BackgroundImage} alt="Building-Construction" className="backgroundImage" />
-            <div className="overlay">
+            <div className="background" style={{ backgroundImage: `url(${BackgroundImage})` }}>
+                <div className="overlay" />
                 <form className="formBody" onSubmit={submit}>
                     <h2>New Construction Service Request</h2>
                     <div className="row">
